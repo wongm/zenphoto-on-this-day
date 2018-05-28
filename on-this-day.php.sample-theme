@@ -1,0 +1,80 @@
+<?php
+// force UTF-8 ?
+
+if (!defined('WEBPATH')) die();
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<?php zp_apply_filter('theme_head'); ?>
+		<title><?php printBareGalleryTitle(); ?> | On This Day</title>
+		<meta http-equiv="content-type" content="text/html; charset=<?php echo getOption('charset'); ?>" />
+		<link rel="stylesheet" href="<?php echo pathurlencode($zenCSS); ?>" type="text/css" />
+		<?php printRSSHeaderLink('Gallery', gettext('Gallery RSS')); ?>
+	</head>	
+	<body>
+	<?php zp_apply_filter('theme_body_open'); ?>
+	<div id="main">
+	
+		<div id="gallerytitle">
+			<h2><span><?php printHomeLink('', ' | '); ?><a href="<?php echo html_encode(getGalleryIndexURL());?>" title="<?php echo gettext('Albums Index'); ?>"><?php echo getGalleryTitle();?></a> | </span>On This Day</h2>
+		</div>
+	
+			<div id="padbox">
+			
+			<?php
+				if (!function_exists('getSummaryForCurrentDay')) {
+					echo "Please enable 'zenphoto-on-this-day' plugin";
+				exit();
+				}
+				
+				$customDate = "";
+				if (isset($_GET['date']))
+				{
+					$customDate = $_GET['date'];
+				}
+				$summaryForCurrentDay = getSummaryForCurrentDay($customDate);
+				
+				if ($summaryForCurrentDay == null) 
+				{
+					echo "<p>Nothing happened today</p>";
+				} 
+				else
+				{
+					?>
+					<img src="<?php echo $summaryForCurrentDay->imageUrl; ?>" /></a>
+					<p><?php echo $summaryForCurrentDay->title; ?></p>
+					<p><b>Available fields</b></p>
+					<p>yearsAgo: <?php echo $summaryForCurrentDay->yearsAgo; ?></p>
+					<p>date: <?php echo $summaryForCurrentDay->date; ?></p>
+					<p>pastDateToSearch: <?php echo date_format($summaryForCurrentDay->pastDateToSearch, 'Y-m-d H:i:s'); ?></p>
+					<p>imageUrl: <?php echo $summaryForCurrentDay->imageUrl; ?></p>
+					<p>currentDayLink: <?php echo $summaryForCurrentDay->currentDayLink; ?></p>
+					<p>album: <?php echo $summaryForCurrentDay->album; ?></p>
+					<p>timestamp: <?php echo $summaryForCurrentDay->timestamp; ?></p>
+					<p>desc: <?php echo $summaryForCurrentDay->desc; ?></p>
+					<p>title: <?php echo $summaryForCurrentDay->title; ?></p>
+					<?php
+				} ?>
+			
+			</div>
+			
+		</div>
+	</div>
+	
+	<div id="credit"><?php printCustomPageURL(gettext("Archive View"),"archive"); ?> |
+	<?php printZenphotoLink(); ?>
+	<?php
+	if (function_exists('printUserLogin_out')) {
+		printUserLogin_out(" | ");
+	}
+	?>
+	</div>
+	
+	<?php
+	printAdminToolbox();
+	zp_apply_filter('theme_body_close');
+	?>
+	
+	</body>
+</html>
