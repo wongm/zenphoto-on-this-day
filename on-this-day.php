@@ -16,7 +16,8 @@ $plugin_URL = "https://github.com/wongm/zenphoto-on-this-day/";
 function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
 
     if (!function_exists('setCustomPhotostream')) {
-    	exit();
+        echo "Please enable 'zenphoto-photostream' plugin";
+        exit();
     }
     
     $now = time();
@@ -25,10 +26,10 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
         $now = strtotime($customDate . ' 22:00:00');
     }
     $oneDay = new DateInterval('P1D');
-    $melbournetimezone = new DateTimeZone('Australia/Melbourne');
+    $localTimezone = new DateTimeZone(getOption('time_zone'));
     $dateToSearch = new DateTime();
     $dateToSearch->setTimestamp($now);
-    $dateToSearch->setTimezone($melbournetimezone);
+    $dateToSearch->setTimezone($localTimezone);
     
     $currentHour = $dateToSearch->format('H');
     if ($currentHour < (int)$offsetHours)
@@ -38,6 +39,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
     $currentDayLink = $dateToSearch->format('Y-m-d');
     
     $maxHitcounter = 0;
+    $candidate = null;
     foreach (array(1, 2, 5, 10, 15) AS $year)
     {
         if ($year == 1)
@@ -54,7 +56,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
         $dayLink = $pastDateToSearch->format('Y-m-d');
     
         // run the query
-        setCustomPhotostream("i.date >= '$dayLink' AND i.date < '$dayLink' + INTERVAL 1 DAY AND a.folder NOT LIKE '%bus%' AND a.folder NOT LIKE '%bits%' AND a.folder != 'road-coaches' AND a.folder != 'photoshop' AND a.folder NOT LIKE 'wagons%'", "", "i.hitcounter DESC");
+        setCustomPhotostream("i.date >= '$dayLink' AND i.date < '$dayLink' + INTERVAL 1 DAY", "", "i.hitcounter DESC");
     
         // validate we have photos to show
         $photocount = getNumPhotostreamImages();
@@ -63,8 +65,12 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
             next_photostream_image();
             
             global $_zp_current_image;
-            //$hitcounter = (getHitcounter($_zp_current_image) / $year);
-            $hitcounter = getHitcounter($_zp_current_image);
+            
+            if (function_exists('getHitcounter')) {
+                $hitcounter = getHitcounter($_zp_current_image);
+            } else {
+                $hitcounter = 1;
+            }
             if ($hitcounter > $maxHitcounter)
             {
                 $candidate = new stdClass;
