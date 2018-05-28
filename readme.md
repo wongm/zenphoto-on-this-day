@@ -1,11 +1,10 @@
 # zenphoto-on-this-day
 Plugin for the Zenphoto open-source gallery that generates 'on this day' content for use in your gallery.
 
-# What it does
+# Example
 
 This plugin queries your photo gallery for photos taken 1, 2, 5, 10, 15 years ago from the current date, and returns either the oldest image, or the highest number of views if the 'hitcounter' plugin is enabled.
 
-# Example
 See the plugin in use under the 'On this day' heading at https://railgallery.wongm.com/
 
 ![image](https://user-images.githubusercontent.com/916546/40593788-1fa8e16e-626e-11e8-8a21-ac296ca941ff.png)
