@@ -11,6 +11,18 @@ See the plugin in use under the 'On this day' heading at https://railgallery.won
 
 You can also use the plugin to generate a RSS feed - example can be found at https://railgallery.wongm.com/page/rss-on-this-day
 
+Available data fields:
+
+* yearsAgo
+* date
+* pastDateToSearch
+* imageUrl
+* currentDayLink
+* album
+* timestamp
+* desc
+* title
+
 # Installation
 
 1. Install the 'zenphoto-photostream' plugin from https://github.com/wongm/zenphoto-photostream
