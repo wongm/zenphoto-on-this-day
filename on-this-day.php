@@ -78,6 +78,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
                 $candidate->date = getImageDate();
                 $candidate->pastDateToSearch = $pastDateToSearch;
                 $candidate->imageUrl = getDefaultSizedImage();
+                $candidate->imagePageUrl = getImageURL();
                 $candidate->currentDayLink = $currentDayLink;
                 $candidate->album = getAlbumTitleForPhotostreamImage();
                 $candidate->timestamp = $dateToSearch->getTimestamp();
