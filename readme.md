@@ -25,7 +25,7 @@ Available data fields:
 
 # Installation
 
-1. Install the 'zenphoto-photostream' plugin from https://github.com/wongm/zenphoto-photostream
+1. Install the 'zenphoto-photostream' plugin from https://github.com/wongm/zenphoto-on-this-day
 2. Copy on-this-day.php into the /plugins directory of your Zenphoto installation.
 3. Rename on-this-day.php.sample-theme to on-this-day.php and copy it into your current Zenphoto theme folder.
 4. Enable the 'on this day' plugin in the Zenphoto backend.
