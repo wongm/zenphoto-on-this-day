@@ -19,7 +19,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
         echo "Please enable 'zenphoto-photostream' plugin";
         exit();
     }
-    
+
     $now = time();
     if (strlen($customDate) > 0)
     {
@@ -30,16 +30,16 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
     $dateToSearch = new DateTime();
     $dateToSearch->setTimestamp($now);
     $dateToSearch->setTimezone($localTimezone);
-    
+
     $currentHour = $dateToSearch->format('H');
     if ($currentHour < (int)$offsetHours)
     {
         $dateToSearch->sub($oneDay);
     }
     $currentDayLink = $dateToSearch->format('Y-m-d');
-    
+
     $maxHitcounter = 0;
-    $candidate = null;
+    $candidate = new stdClass;
     foreach (array(1, 2, 5, 10, 15) AS $year)
     {
         if ($year == 1)
@@ -50,7 +50,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
         {
             $suffix = " years ago";
         }
-    
+
         $pastDateToSearch = clone $dateToSearch;
         $pastDateToSearch->sub(new DateInterval('P' . $year . 'Y'));
         $dayLink = $pastDateToSearch->format('Y-m-d');
@@ -63,13 +63,12 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
         if ($photocount > 0)
         {
             next_photostream_image();
-            
+
             global $_zp_current_image;
-            
+
+            $hitcounter = 1;
             if (function_exists('getHitcounter')) {
                 $hitcounter = getHitcounter($_zp_current_image);
-            } else {
-                $hitcounter = 1;
             }
             if ($hitcounter > $maxHitcounter)
             {
@@ -81,14 +80,14 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
                 $candidate->imagePageUrl = getImageURL();
                 $candidate->currentDayLink = $currentDayLink;
                 $candidate->album = getAlbumTitleForPhotostreamImage();
-                $candidate->timestamp = $dateToSearch->getTimestamp();
                 $candidate->desc = getImageTitle() . ". " . getImageDesc();
-                $candidate->title = "$candidate->yearsAgo, " . $candidate->pastDateToSearch->format('d F Y');
+                $candidate->title = "$candidate->yearsAgo, " . $candidate->pastDateToSearch->format('j F Y');
                 $maxHitcounter = $hitcounter;
             }
         }
     }
     
+    $candidate->timestamp = $dateToSearch->getTimestamp();
     return $candidate;
 }
 
