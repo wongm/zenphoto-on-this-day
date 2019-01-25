@@ -32,3 +32,20 @@ Available data fields:
 5. Navigate to yourzenphotoaddress.com/?p=on-this-day and you will now see a page displaying photos taken X days ago.
 
 For testing purposes a custom data parameter can also be passed into the page - format is `?date=2015-11-24`.
+
+# Custom filters
+
+The 'on_this_day_additional_where' hook enables custom SQL WHERE to be applied to the image search logic. This enables specific folders to be excluded when selecting a selected image.
+
+Example hook (to be added to functions.php in your Zenphoto theme):
+
+```
+zp_register_filter('on_this_day_additional_where', 'on_this_day_additional_where');
+
+function on_this_day_additional_where() {
+    return "a.folder NOT LIKE '%stations%' AND a.id NOT IN (SELECT `objectid` FROM ". prefix('obj_to_tag') ." ott INNER JOIN ". prefix('tags') ." t ON ott.`tagid` = t.`id` WHERE ott.`type` = 'albums' AND t.`name` = 'buses')";
+}
+```
+
+The above filter with exclude images from any  albums with 'stations' in their folder name, as well as photos from any album tagged 'buses'.
+
