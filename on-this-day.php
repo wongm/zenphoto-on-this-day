@@ -4,6 +4,8 @@
  *
  * Generates 'on this day' content for use on your gallery
  *
+ * You can add custom filter to the results using the 'on_this_day_additional_where' filter.
+ *
  * @author Marcus Wong (wongm)
  * @package plugins
  */
@@ -54,10 +56,17 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
         $pastDateToSearch = clone $dateToSearch;
         $pastDateToSearch->sub(new DateInterval('P' . $year . 'Y'));
         $dayLink = $pastDateToSearch->format('Y-m-d');
-    
+
+        $sqlWhere = "i.date >= '$dayLink' AND i.date < '$dayLink' + INTERVAL 1 DAY";
+        $additionalSqlWhere = zp_apply_filter('on_this_day_additional_where');
+        if (strlen($additionalSqlWhere) > 0)
+        {
+            $sqlWhere = "$sqlWhere AND $additionalSqlWhere";
+        }
+
         // run the query
-        setCustomPhotostream("i.date >= '$dayLink' AND i.date < '$dayLink' + INTERVAL 1 DAY", "", "i.hitcounter DESC");
-    
+        setCustomPhotostream($sqlWhere, "", "i.hitcounter DESC");
+
         // validate we have photos to show
         $photocount = getNumPhotostreamImages();
         if ($photocount > 0)
@@ -90,5 +99,18 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
     $candidate->timestamp = $dateToSearch->getTimestamp();
     return $candidate;
 }
+
+/*
+ * Example implementation of the 'on_this_day_additional_where' filter:
+ *
+ 
+zp_register_filter('on_this_day_additional_where', 'on_this_day_additional_where');
+
+function on_this_day_additional_where() {
+    return "a.folder NOT LIKE '%stations%' AND a.id NOT IN (SELECT `objectid` FROM ". prefix('obj_to_tag') ." ott INNER JOIN ". prefix('tags') ." t ON ott.`tagid` = t.`id` WHERE ott.`type` = 'albums' AND t.`name` = 'buses')";
+}
+
+ *
+ */
 
 ?>
