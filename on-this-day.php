@@ -96,9 +96,17 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
                 $candidate->album = getAlbumTitleForPhotostreamImage();
                 $candidate->desc = getImageTitle() . ". " . getImageDesc();
                 $candidate->title = "$candidate->yearsAgo, " . $candidate->pastDateToSearch->format('j F Y');
+                $candidate->image = $_zp_current_image;
                 $maxHitcounter = $hitcounter;
             }
         }
+    }
+
+    // reset current image to the one we were on
+    if (property_exists($candidate, 'image'))
+    {
+         global $_zp_current_image;
+        $_zp_current_image = $candidate->image;
     }
 
     $candidate->timestamp = $dateToSearch->getTimestamp();
