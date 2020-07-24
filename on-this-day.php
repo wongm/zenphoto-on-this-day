@@ -63,9 +63,14 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
         {
             $sqlWhere = "$sqlWhere AND $additionalSqlWhere";
         }
+        
+        $sqlOrder = "i.hitcounter DESC";
+        if (function_exists('NewDailySummary')) {
+            $sqlOrder = "i.daily_score DESC, " . $sqlOrder;
+        }
 
         // run the query
-        setCustomPhotostream($sqlWhere, "", "i.hitcounter DESC");
+        setCustomPhotostream($sqlWhere, "", $sqlOrder);
 
         // validate we have photos to show
         $photocount = getNumPhotostreamImages();
@@ -95,7 +100,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
             }
         }
     }
-    
+
     $candidate->timestamp = $dateToSearch->getTimestamp();
     return $candidate;
 }
