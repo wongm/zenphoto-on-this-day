@@ -42,7 +42,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
 
     $maxHitcounter = 0;
     $candidate = new stdClass;
-    foreach (array(1, 2, 5, 10, 15) AS $year)
+    foreach (array(1, 2, 5, 10, 15, 20) AS $year)
     {
         if ($year == 1)
         {
