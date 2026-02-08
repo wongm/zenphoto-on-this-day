@@ -86,6 +86,18 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
             }
             if ($hitcounter > $maxHitcounter)
             {
+                $titleAndDescription = getImageTitle();
+                if (strlen(getImageDesc()) > 0)
+                {
+                    $lastchar = $titleAndDescription[-1];
+                    if (!ctype_punct($lastchar)) 
+                    {
+                        $titleAndDescription .=  ".";
+                    }
+                    
+                    $titleAndDescription .= " " . getImageDesc();
+                }
+                
                 $candidate = new stdClass;
                 $candidate->yearsAgo = $year . $suffix;
                 $candidate->date = getImageDate();
@@ -94,7 +106,7 @@ function getSummaryForCurrentDay($customDate, $offsetHours = 0) {
                 $candidate->imagePageUrl = getImageURL();
                 $candidate->currentDayLink = $currentDayLink;
                 $candidate->album = getAlbumTitleForPhotostreamImage();
-                $candidate->desc = getImageTitle() . ". " . getImageDesc();
+                $candidate->desc = $titleAndDescription;
                 $candidate->title = "$candidate->yearsAgo, " . $candidate->pastDateToSearch->format('j F Y');
                 $candidate->image = $_zp_current_image;
                 $maxHitcounter = $hitcounter;
